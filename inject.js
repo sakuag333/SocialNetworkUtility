@@ -42,9 +42,10 @@ alert(post);
 
 
 document.body.addEventListener('DOMNodeInserted', function( event ) {
-    if (event.target.id == "ember3") {
-    markReadOnLoad();
-    }
+    // TODO: Optimise calling markPstAsRead(). Currently it is being called every time a dom element is inserted.
+    //if (event.target.id == "ember3") {
+        markPostsAsRead();
+    //}
 });
 
 
@@ -80,7 +81,7 @@ function getPostId() {
 
 }
 
-function markReadOnLoad() {
+function markPostsAsRead() {
     chrome.storage.sync.get({
 		list: []
 	}, function (data) {
@@ -88,9 +89,9 @@ function markReadOnLoad() {
         for (var i = 0; i < posts.length; i++) {  
             var post = document.body.querySelector("div[postid='" + posts[i] + "']");
             
-            if (post != null) {
+            if (post != null && !post.className.includes(' xyz ')) {
 			   // Add CSS class    
-			   post.className += ' xyz';
+			   post.className += ' xyz ';
             }
 
 
