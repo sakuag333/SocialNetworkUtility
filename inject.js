@@ -6,47 +6,35 @@ document.body.addEventListener('click', function (event) {
 	if (!event) {
 		return;
 	}
-    
+       
     // Log post id from storage
-	getPostId();
-
-	var posts = document.querySelectorAll('div[postid]');
-
-	for (var i = 0; i < posts.length; i++) {
-		if (posts[i].contains(event.target)) {
+	logPostId();
             
-            // Store post id in storage
-			setPostId(posts[i].getAttribute('postid'))
-
-
-			// Add CSS class    
-			//posts[i].className += ' xyz';
-
-
-			// Get postid
-			//alert(posts[i].getAttribute('postid'));
-		}
-	}
+    // Store post id in storage
+    var postId = getPostId(event.target)
+    if (postId) {
+		storePostId(postId.getAttribute('postid'))
+    }
 });
 
 
 document.body.addEventListener('DOMNodeInserted', function( event ) {
     
-    //if(!event || !event.target.parentNode.getAttribute('postid')) { return;}
-    
+    if(!event || !event.target || !getPostId(event.target)) { return;}
+        
     var posts = document.querySelectorAll('div[postid]');
     // This check prevents greying out page that comes after clicking on a post. If we remove this check, the whole redirected page gets greyed out.
     // This works because there are two or less divs with postid attribute on the redirected page.
     if (posts.length <= 2) {return;}
     
-    // TODO: Optimise calling markPstAsRead(). Currently it is being called every time a dom element is inserted.
+    // TODO: Optimise calling markPostAsRead(). Currently it is being called every time a dom element is inserted.
     //if (event.target.id == "ember3") {
         markPostsAsRead();
     //}
 });
 
 
-function setPostId(postid) {
+function storePostId(postid) {
 
 	chrome.storage.sync.get({
 		list: [] //put defaultvalues if any
@@ -68,7 +56,7 @@ function update(array, postid) {
 }
 
 
-function getPostId() {
+function logPostId() {
 	chrome.storage.sync.get({
 		list: []
 	}, function (data) {
@@ -94,6 +82,18 @@ function markPostsAsRead() {
 		
 	}
 	});
+}
+
+function getPostId(target) {
+    var posts = document.querySelectorAll('div[postid]');
+
+	for (var i = 0; i < posts.length; i++) {
+		if (posts[i].contains(target)) {
+            return posts[i];
+		}
+	}
+    
+    return null;
 }
 
 /*
