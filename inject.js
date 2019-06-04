@@ -1,3 +1,5 @@
+// TODO: Remove fire & forget in async calls.
+
 document.body.addEventListener('click', function (event) {
 	if (!event) {
 		return;
@@ -25,23 +27,14 @@ document.body.addEventListener('click', function (event) {
 	}
 });
 
-/*
-document.body.addEventListener('click', function(event) {
-if (!event) {return;}
-var post = document.body.querySelector("div[postid='231cd3d019']");
-try {
-if (post.contains(event.target)) { 
-console.log(post.innerHTML);
-}
-}
-catch (err) {
-alert(post);
-}
-});
-*/
-
 
 document.body.addEventListener('DOMNodeInserted', function( event ) {
+    
+    var posts = document.querySelectorAll('div[postid]');
+    // This check prevents greying out page that comes after clicking on a post. If we remove this check, the whole redirected page gets greyed out.
+    // This works because there are two or less divs with postid attribute on the redirected page.
+    if (posts.length <= 2) {return;}
+    
     // TODO: Optimise calling markPstAsRead(). Currently it is being called every time a dom element is inserted.
     //if (event.target.id == "ember3") {
         markPostsAsRead();
@@ -54,7 +47,7 @@ function setPostId(postid) {
 	chrome.storage.sync.get({
 		list: [] //put defaultvalues if any
 	}, function (data) {
-		update(data.list, postid); //storing the storage value in a variable and passing to update function
+		update(data.list, postid);
 	});
 }
 
@@ -63,7 +56,6 @@ function update(array, postid) {
 		return;
 	}
 	array.push(postid);
-	//then call the set to update with modified value
 	chrome.storage.sync.set({
 		list: array
 	}, function () {
@@ -93,11 +85,22 @@ function markPostsAsRead() {
 			   // Add CSS class    
 			   post.className += ' xyz ';
             }
-
-
-			// Get postid
-			//alert(posts[i].getAttribute('postid'));
 		
 	}
 	});
 }
+
+/*
+document.body.addEventListener('click', function(event) {
+if (!event) {return;}
+var post = document.body.querySelector("div[postid='231cd3d019']");
+try {
+if (post.contains(event.target)) { 
+console.log(post.innerHTML);
+}
+}
+catch (err) {
+alert(post);
+}
+});
+*/
