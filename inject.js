@@ -1,5 +1,7 @@
 // TODO: Remove fire & forget in async calls.
 
+var count = 0;
+
 document.body.addEventListener('click', function (event) {
 	if (!event) {
 		return;
@@ -29,6 +31,8 @@ document.body.addEventListener('click', function (event) {
 
 
 document.body.addEventListener('DOMNodeInserted', function( event ) {
+    
+    //if(!event || !event.target.parentNode.getAttribute('postid')) { return;}
     
     var posts = document.querySelectorAll('div[postid]');
     // This check prevents greying out page that comes after clicking on a post. If we remove this check, the whole redirected page gets greyed out.
@@ -74,6 +78,8 @@ function getPostId() {
 }
 
 function markPostsAsRead() {
+    count++;
+    if (count%100 == 0) {console.log(count)};
     chrome.storage.sync.get({
 		list: []
 	}, function (data) {
