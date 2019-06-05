@@ -84,7 +84,7 @@ function logPostId() {
 
 function markPostsAsRead() {
     count++;
-    if (count%100 == 0) {console.log(count)};
+    //if (count%100 == 0) {console.log(count)};
     chrome.storage.sync.get({
         list: []
     }, function(data) {
