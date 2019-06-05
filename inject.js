@@ -11,7 +11,7 @@ function clickHandler (event) {
 	}
        
     // Log post id from storage
-	logPostId();
+	//logPostId();
             
     // Store post id in storage
     var postId = getPostId(event.target)
