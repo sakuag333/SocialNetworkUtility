@@ -38,18 +38,16 @@ document.body.addEventListener('DOMNodeInserted', function(event) {
 
 
 function isTargetAPostDiv(target) {
-    // This does not work, as no DOM element for post is inserted when view changes from list to feed or vice versa.
-    /*
+    // TODO: Optimise this, as too many targets match this condition. All targets that are present inside a post matches this.
     try {
         return target.hasAttribute('postid');
     } catch (err) {
-        console.log(err);
-        return false;
+        // This has to be returned true, as no DOM element for post is inserted when view changes from list to feed or vice versa.
+        return true;
     }
-    */
+    
         
-    // Optimise this, as too many targets match this condition. All targets that are present inside a post matches this.
-    return getPostId(target);
+    //return getPostId(target);
 }
 
 
@@ -86,7 +84,7 @@ function logPostId() {
 
 function markPostsAsRead() {
     count++;
-    //if (count%2 == 0) {console.log(count)};
+    if (count%100 == 0) {console.log(count)};
     chrome.storage.sync.get({
         list: []
     }, function(data) {
