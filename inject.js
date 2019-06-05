@@ -23,18 +23,26 @@ function clickHandler (event) {
 
 document.body.addEventListener('DOMNodeInserted', function( event ) {
     
-    if(!event || !event.target || !getPostId(event.target)) { return;}
+    if(!event || !event.target || !isTargetAPostDiv(event.target)) { return;}
            
     var posts = document.querySelectorAll('div[postid]');
     // This check prevents greying out page that comes after clicking on a post. If we remove this check, the whole redirected page gets greyed out.
     // This works because there are two or less divs with postid attribute on the redirected page.
     if (posts.length <= 2) {return;}
     
-    // TODO: Optimise calling markPostAsRead(). Currently it is being called every time a dom element is inserted.
-    //if (event.target.id == "ember3") {
-        markPostsAsRead();
-    //}
+    markPostsAsRead();
 });
+
+
+function isTargetAPostDiv(target) {
+    try {
+      return target.hasAttribute('postid');
+    } catch(err) {
+       return false;
+    }
+    
+    //return getPostId(target);
+}
 
 
 function storePostId(postid) {
@@ -70,7 +78,7 @@ function logPostId() {
 
 function markPostsAsRead() {
     count++;
-    if (count%100 == 0) {console.log(count)};
+    //if (count%2 == 0) {console.log(count)};
     chrome.storage.sync.get({
 		list: []
 	}, function (data) {
@@ -98,18 +106,3 @@ function getPostId(target) {
     
     return null;
 }
-
-/*
-document.body.addEventListener('click', function(event) {
-if (!event) {return;}
-var post = document.body.querySelector("div[postid='231cd3d019']");
-try {
-if (post.contains(event.target)) { 
-console.log(post.innerHTML);
-}
-}
-catch (err) {
-alert(post);
-}
-});
-*/
