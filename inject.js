@@ -2,7 +2,10 @@
 
 var count = 0;
 
-document.body.addEventListener('click', function (event) {
+document.body.addEventListener('click', clickHandler);
+document.body.addEventListener('contextmenu', clickHandler);
+
+function clickHandler (event) {
 	if (!event) {
 		return;
 	}
@@ -15,13 +18,13 @@ document.body.addEventListener('click', function (event) {
     if (postId) {
 		storePostId(postId.getAttribute('postid'))
     }
-});
+}
 
 
 document.body.addEventListener('DOMNodeInserted', function( event ) {
     
     if(!event || !event.target || !getPostId(event.target)) { return;}
-        
+           
     var posts = document.querySelectorAll('div[postid]');
     // This check prevents greying out page that comes after clicking on a post. If we remove this check, the whole redirected page gets greyed out.
     // This works because there are two or less divs with postid attribute on the redirected page.
@@ -86,7 +89,7 @@ function markPostsAsRead() {
 
 function getPostId(target) {
     var posts = document.querySelectorAll('div[postid]');
-
+    
 	for (var i = 0; i < posts.length; i++) {
 		if (posts[i].contains(target)) {
             return posts[i];
